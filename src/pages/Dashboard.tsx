@@ -1,6 +1,7 @@
 import { Box, Typography } from '@mui/material';
+import DynamicFuelTable from './DynamicFuelTable';
 
-export default function Dashboard() {
+const Dashboard = () => {
   return (
     <Box
       sx={{
@@ -10,44 +11,48 @@ export default function Dashboard() {
         width: '100%',
         minHeight: '100vh',
         p: { xs: 3, md: 6 },
+        backgroundColor: '#f8f9fa'
       }}
     >
-      {/* Encabezado */}
       <Typography
+        variant="h4"
         sx={{
           fontFamily: 'Poppins, sans-serif',
           fontWeight: 500,
-          fontSize: { xs: '20px', md: '24px' },
-          lineHeight: '36px',
-          color: '#000000',
-          display: 'flex',
-          alignItems: 'center',
-          gap: 1,
           mb: 4,
-          width: '90%', // Reducción del ancho del título
-          textAlign: 'left',
-          pl: { xs: 0, md: 0 }, // Ajuste de margen izquierdo para mejor alineación
+          alignSelf: 'flex-start',
+          color: '#2d3748'
         }}
       >
-        Bienvenido 👋,
+        Bienvenido 👋
       </Typography>
 
-      {/* Contenedor grande */}
-      <Box
-        sx={{
-          width: { xs: '80%', sm: '70%', md: '680px' }, // Reducción del ancho del contenedor
-          minHeight: '1000px', // Ajuste de altura
-          backgroundColor: '#FFFFFF',
-          borderRadius: '30px',
-          boxShadow: '0px 10px 60px rgba(226, 236, 249, 0.5)',
-          p: { xs: 3, md: 5 },
-          maxWidth: '900px', // Límite de ancho
-          ml: { xs: 0, md: '0' }, // Ajuste del margen izquierdo
-          mr: { xs: 0, md: '50px' }, // Añadir margen derecho para balancear
-        }}
-      >
-        {/* Contenido aquí */}
+      <Box sx={{ 
+        width: '100%', 
+        maxWidth: 1200,
+        backgroundColor: 'white',
+        borderRadius: '30px',
+        p: { xs: 2, md: 4 }
+      }}>
+        <Typography
+          variant="h6"
+          sx={{ 
+            mb: 3,
+            fontWeight: 600,
+            color: '#4a5568'
+          }}
+        >
+          Reporte de combustible
+        </Typography>
+
+        <DynamicFuelTable
+          dataUrl="/api/fuel-reports"
+          initialSort="fecha"
+          rowsPerPageOptions={[10, 25, 50]}
+        />
       </Box>
     </Box>
   );
-}
+};
+
+export default Dashboard;
