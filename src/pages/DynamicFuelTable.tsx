@@ -15,6 +15,8 @@ import {
   Typography
 } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
+import Button from '@mui/material/Button';
+
 
 export interface FuelData {
   id: number;
@@ -34,10 +36,13 @@ interface HeadCell {
 }
 
 interface DynamicFuelTableProps {
-  dataUrl: string;
-  initialSort?: keyof FuelData;
-  rowsPerPageOptions?: number[];
-}
+    dataUrl: string;
+    initialSort?: keyof FuelData;
+    rowsPerPageOptions?: number[];
+    initialData?: FuelData[]; // Nueva prop
+  }
+  
+  
 
 type Order = 'asc' | 'desc';
 
@@ -53,10 +58,11 @@ const headCells: HeadCell[] = [
 const DynamicFuelTable: React.FC<DynamicFuelTableProps> = ({
   dataUrl,
   initialSort = 'fecha',
-  rowsPerPageOptions = [10, 25, 50]
+  rowsPerPageOptions = [10, 25, 50],
+  initialData = []
 }) => {
-  const [data, setData] = useState<FuelData[]>([]);
-  const [totalItems, setTotalItems] = useState(0);
+    const [data, setData] = useState<FuelData[]>(initialData);
+    const [totalItems, setTotalItems] = useState(0);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(rowsPerPageOptions[0]);
   const [order, setOrder] = useState<Order>('desc');

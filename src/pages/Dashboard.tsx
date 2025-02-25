@@ -1,6 +1,6 @@
 import { Box, Typography } from '@mui/material';
 import DynamicFuelTable from './DynamicFuelTable';
-
+import { mockFuelData } from './mockData';
 const Dashboard = () => {
   return (
     <Box
@@ -46,10 +46,11 @@ const Dashboard = () => {
         </Typography>
 
         <DynamicFuelTable
-          dataUrl="/api/fuel-reports"
-          initialSort="fecha"
-          rowsPerPageOptions={[10, 25, 50]}
-        />
+        dataUrl="mock" // Temporal
+        initialSort="fecha"
+        rowsPerPageOptions={[5, 10, 25]}
+        initialData={mockFuelData} // Agrega esta prop
+      />
       </Box>
     </Box>
   );
