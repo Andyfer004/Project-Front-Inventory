@@ -1,13 +1,16 @@
 import * as React from 'react';
-import { Box, Button, TextField, Typography } from '@mui/material';
+import { Box, Button, TextField, Typography, InputAdornment } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import LockIcon from '@mui/icons-material/Lock';
+import muniLogo from '../assets/munilogo.png';
 
 export default function SignIn() {
   const navigate = useNavigate();
   const [formData, setFormData] = React.useState({ email: '', password: '' });
   const [error, setError] = React.useState('');
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -15,75 +18,83 @@ export default function SignIn() {
     const { email, password } = formData;
     console.log(`Signing in with email: ${email}, password: ${password}`);
 
-    if (email === '' && password === '') {
-      navigate('/');
+    if (email === '' || password === '') {
+      setError('Please enter both username and password.');
     } else {
-      setError('Invalid email or password. Try again.');
+      navigate('/');
     }
   };
 
   return (
+    
     <Box
       sx={{
         height: '100vh',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        background: 'linear-gradient(135deg, #121212 0%, #1a1a2e 100%)',
+        background: 'linear-gradient(135deg, #0f2027, #204327, #33642c)',
+        padding: 2,
       }}
     >
       <Box
         sx={{
-          width: 380,
+          width: 400,
           padding: 4,
-          borderRadius: 2,
-          backdropFilter: 'blur(20px)',
-          backgroundColor: 'rgba(255, 255, 255, 0.15)',
-          boxShadow: '0px 10px 25px rgba(0, 0, 0, 0.3)',
+          borderRadius: 15,
+          backgroundColor: 'white',
+          boxShadow: '0px 10px 25px rgba(0, 0, 0, 0.9)',
           textAlign: 'center',
-          color: 'white',
         }}
       >
-        <Typography variant="h5" fontWeight={600} mb={2}>
-          Welcome Back
+        <Box component="img" src={muniLogo} alt="Municipio de Zacapa" sx={{ width: '100px', mb: 2 }} />
+
+        <Typography variant="h5" fontWeight={700} mb={3} sx={{ fontFamily: 'Poppins, sans-serif', color: '#000000' }}>
+          Municipalidad de Zacapa
         </Typography>
 
+        <Typography variant="body2" fontWeight={500} textAlign="left" sx={{ fontFamily: 'Poppins, sans-serif', mb: 0.5 }}>
+          Username
+        </Typography>
         <TextField
           fullWidth
           name="email"
-          label="Email"
-          type="email"
+          type="text"
           variant="outlined"
           value={formData.email}
           onChange={handleChange}
-          sx={{
-            mb: 2,
-            backgroundColor: 'rgba(255, 255, 255, 0.2)',
-            borderRadius: 1,
-            '& .MuiOutlinedInput-root': { borderRadius: 1, color: 'white' },
-            '& .MuiInputLabel-root': { color: 'white' },
+          sx={{ mb: 2, borderRadius: 1, fontFamily: 'Poppins, sans-serif' }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <AccountCircleIcon />
+              </InputAdornment>
+            ),
           }}
         />
 
+        <Typography variant="body2" fontWeight={500} textAlign="left" sx={{ fontFamily: 'Poppins, sans-serif', mb: 0.5 }}>
+          Password
+        </Typography>
         <TextField
           fullWidth
           name="password"
-          label="Password"
           type="password"
           variant="outlined"
           value={formData.password}
           onChange={handleChange}
-          sx={{
-            mb: 2,
-            backgroundColor: 'rgba(255, 255, 255, 0.2)',
-            borderRadius: 1,
-            '& .MuiOutlinedInput-root': { borderRadius: 1, color: 'white' },
-            '& .MuiInputLabel-root': { color: 'white' },
+          sx={{ mb: 2, borderRadius: 1, fontFamily: 'Poppins, sans-serif' }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <LockIcon />
+              </InputAdornment>
+            ),
           }}
         />
 
         {error && (
-          <Typography color="#ff4d4d" fontSize="0.9rem" mb={2}>
+          <Typography color="red" fontSize="0.9rem" mb={2}>
             {error}
           </Typography>
         )}
@@ -94,12 +105,15 @@ export default function SignIn() {
           onClick={handleSignIn}
           sx={{
             fontWeight: 'bold',
-            backgroundColor: '#ff4d4d',
+            backgroundColor: '#38B000',
             '&:hover': { backgroundColor: '#d43f3f' },
             transition: 'all 0.3s ease',
+            fontFamily: 'Poppins, sans-serif',
+            borderRadius: 5,
+            padding: '12px 0',
           }}
         >
-          Login
+          LOGIN
         </Button>
       </Box>
     </Box>
