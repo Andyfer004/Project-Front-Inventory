@@ -45,7 +45,7 @@ export const mockFuelData: FuelData[] = [
     kilometros: 56789,
     monto: 230.25,
     fecha: "2024-03-11",
-    estado: "Cancelado"
+    estado: "Aprobado"
   },
   {
     id: 6,

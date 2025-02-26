@@ -1,4 +1,9 @@
 import React, { useEffect, useState } from 'react';
+
+import { Tooltip } from '@mui/material';
+import CheckIcon from '@mui/icons-material/Check';
+import CloseIcon from '@mui/icons-material/Close';
+
 import {
   Box,
   Paper,
@@ -184,16 +189,40 @@ const DynamicFuelTable: React.FC<DynamicFuelTableProps> = ({
                 <TableCell align="right">{row.kilometros.toLocaleString()}</TableCell>
                 <TableCell align="right">Q {row.monto.toFixed(2)}</TableCell>
                 <TableCell>{formatDate(row.fecha)}</TableCell>
-                <TableCell>
-                  <Chip
-                    label={row.estado}
-                    color={row.estado === 'Aprobado' ? 'success' : 'error'}
-                    sx={{ 
-                      borderRadius: '4px',
-                      fontWeight: 500,
-                      minWidth: 100
+                <TableCell align="center">
+                <Tooltip title={row.estado} arrow>
+                    <Box
+                    sx={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        width: 28,
+                        height: 28,
+                        borderRadius: '50%',
+                        backgroundColor: row.estado === 'Aprobado' ? '#e8f5e9' : '#ffebee',
+                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                        border: `2px solid ${row.estado === 'Aprobado' ? '#4CAF50' : '#F44336'}`
                     }}
-                  />
+                    >
+                    {row.estado === 'Aprobado' ? (
+                        <CheckIcon 
+                        sx={{ 
+                            color: '#4CAF50',
+                            fontSize: '1.2rem',
+                            strokeWidth: 2
+                        }} 
+                        />
+                    ) : (
+                        <CloseIcon 
+                        sx={{ 
+                            color: '#F44336',
+                            fontSize: '1.2rem',
+                            strokeWidth: 2
+                        }} 
+                        />
+                    )}
+                    </Box>
+                </Tooltip>
                 </TableCell>
               </TableRow>
             ))}
