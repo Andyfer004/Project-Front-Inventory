@@ -8,6 +8,7 @@ export const mockFuelData: FuelData[] = [
     placas: "ABC123",
     kilometros: 12345,
     monto: 450.00,
+    cantidadGalones:0,
     fecha: "2024-03-15",
     estado: "Aprobado"
   },
@@ -17,8 +18,9 @@ export const mockFuelData: FuelData[] = [
     placas: "XYZ789",
     kilometros: 23456,
     monto: 320.50,
+    cantidadGalones:0,
     fecha: "2024-03-14",
-    estado: "Cancelado"
+    estado: "Pendiente"
   },
   {
     id: 3,
@@ -26,8 +28,9 @@ export const mockFuelData: FuelData[] = [
     placas: "DEF456",
     kilometros: 34567,
     monto: 280.75,
+    cantidadGalones:0,
     fecha: "2024-03-13",
-    estado: "Aprobado"
+    estado: "Pendiente"
   },
   {
     id: 4,
@@ -35,6 +38,7 @@ export const mockFuelData: FuelData[] = [
     placas: "GHI789",
     kilometros: 45678,
     monto: 510.00,
+    cantidadGalones:0,
     fecha: "2024-03-12",
     estado: "Aprobado"
   },
@@ -44,8 +48,9 @@ export const mockFuelData: FuelData[] = [
     placas: "JKL012",
     kilometros: 56789,
     monto: 230.25,
+    cantidadGalones:0,
     fecha: "2024-03-11",
-    estado: "Aprobado"
+    estado: "Rechazado"
   },
   {
     id: 6,
@@ -53,6 +58,7 @@ export const mockFuelData: FuelData[] = [
     placas: "MNO345",
     kilometros: 67890,
     monto: 490.80,
+    cantidadGalones:0,
     fecha: "2024-03-10",
     estado: "Aprobado"
   },
@@ -62,8 +68,9 @@ export const mockFuelData: FuelData[] = [
     placas: "PQR678",
     kilometros: 78901,
     monto: 375.00,
+    cantidadGalones:0,
     fecha: "2024-03-09",
-    estado: "Cancelado"
+    estado: "Rechazado"
   },
   {
     id: 8,
@@ -71,7 +78,8 @@ export const mockFuelData: FuelData[] = [
     placas: "STU901",
     kilometros: 89012,
     monto: 420.30,
+    cantidadGalones:0,
     fecha: "2024-03-08",
-    estado: "Aprobado"
+    estado: "Pendiente"
   }
 ];

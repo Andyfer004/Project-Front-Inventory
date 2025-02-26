@@ -24,7 +24,7 @@ const Dashboard = () => {
           color: '#2d3748'
         }}
       >
-        Bienvenido 👋
+        Municipalidad Zacapa
       </Typography>
 
       <Box sx={{ 
