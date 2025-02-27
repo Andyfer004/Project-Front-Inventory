@@ -127,6 +127,11 @@ const totalPages = Math.ceil(totalItems / rowsPerPage);
     setOpenAcceptModal(true);
   };
   
+  const handleView = (id: number) => {
+
+  };
+  
+
   const handleCloseAcceptModal = () => {
     setOpenAcceptModal(false);
   };
@@ -224,7 +229,34 @@ const totalPages = Math.ceil(totalItems / rowsPerPage);
           />
         </Tooltip>
       </TableCell>
-      <TableCell align="center">Acciones</TableCell>
+      <TableCell align="center">
+                  <Box sx={{ display: 'flex', gap: 1, justifyContent: 'center' }}>
+                    <Tooltip title="Ver detalles">
+                      <IconButton onClick={() => handleView(row.id)} sx={{ backgroundColor: '#f5f5f5', borderRadius: '50%' }}>
+                        <Visibility sx={{ color: '#616161' }} />
+                      </IconButton>
+                    </Tooltip>
+
+                    {row.estado === 'Pendiente' && (
+                      <>
+                       <Tooltip title="Aceptar">
+                        <IconButton onClick={() => handleOpenAcceptModal(row.id)} sx={{ backgroundColor: '#e8f5e9', borderRadius: '50%' }}>
+                          <CheckCircleOutline sx={{ color: '#4CAF50' }} />
+                        </IconButton>
+                      </Tooltip>
+
+
+                        <Tooltip title="Rechazar">
+                          <IconButton onClick={() => handleOpenRejectModal(row.id)} sx={{ backgroundColor: '#ffebee', borderRadius: '50%' }}>
+                            <CancelOutlined sx={{ color: '#F44336' }} />
+                          </IconButton>
+                        </Tooltip>
+                      </>
+                    )}
+                  </Box>
+                </TableCell>
+
+
     </TableRow>
   ))}
 </TableBody>
