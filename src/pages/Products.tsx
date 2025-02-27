@@ -1,15 +1,22 @@
-import { Box, Typography, TextField, Select, MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Pagination } from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
+import { Box, Typography, Select, MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Pagination } from '@mui/material';
 import { useState } from 'react';
+import { vehicles } from './data'; // Importamos los datos
 
 export default function Products() {
-  const totalRecords = 50; // Cantidad total de datos (debe ser dinámica)
-  const rowsPerPage = 5; // Cantidad de filas por página
-  const totalPages = Math.ceil(totalRecords / rowsPerPage); // Cálculo dinámico de páginas
+  const [selectedVehicle, setSelectedVehicle] = useState(vehicles[0]); // Vehículo seleccionado
+  const rowsPerPage = 5;
   const [page, setPage] = useState(1);
+  const totalRecords = selectedVehicle.fuelLogs.length;
+  const totalPages = Math.ceil(totalRecords / rowsPerPage);
 
-  const handleChange = (event, value) => {
+  const handleChangePage = (event, value) => {
     setPage(value);
+  };
+
+  const handleSelectVehicle = (event) => {
+    const vehicle = vehicles.find((v) => v.placas === event.target.value);
+    setSelectedVehicle(vehicle);
+    setPage(1); // Reiniciar la paginación al cambiar de vehículo
   };
 
   return (
@@ -24,24 +31,6 @@ export default function Products() {
         backgroundColor: '#F9FAFB',
       }}
     >
-      {/* Encabezado */}
-      <Typography
-        sx={{
-          fontFamily: 'Poppins, sans-serif',
-          fontWeight: 500,
-          fontSize: { xs: '20px', md: '24px' },
-          color: '#000000',
-          display: 'flex',
-          alignItems: 'center',
-          gap: 1,
-          mb: 4,
-          width: '90%',
-          textAlign: 'left',
-        }}
-      >
-        Bienvenido 👋,
-      </Typography>
-
       {/* Contenedor principal */}
       <Box
         sx={{
@@ -52,6 +41,54 @@ export default function Products() {
           p: { xs: 3, md: 5 },
         }}
       >
+        {/* Sección superior dentro del contenedor */}
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', mb: 3 }}>
+          <Box>
+            <Typography sx={{ fontSize: '24px', fontWeight: 500, mb: 2, fontFamily: 'Poppins, sans-serif' }}>
+              Bitácora de combustible
+            </Typography>
+            <Typography sx={{ color: '#16C098', fontSize: '14px', mb: 6, fontFamily: 'Poppins, sans-serif' }}>
+              Vehículos activos
+            </Typography>
+            <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 2, mb: 2, fontFamily: 'Poppins, sans-serif' }}>
+              <Box sx={{ display: 'flex', gap: 1 }}>
+                <Typography sx={{ fontWeight: 600 }}>Marca:</Typography>
+                <Typography>{selectedVehicle.marca}</Typography>
+              </Box>
+              <Box sx={{ display: 'flex', gap: 1 }}>
+                <Typography sx={{ fontWeight: 600 }}>Color:</Typography>
+                <Typography>{selectedVehicle.color}</Typography>
+              </Box>
+              <Box sx={{ display: 'flex', gap: 1 }}>
+                <Typography sx={{ fontWeight: 600 }}>Tipo:</Typography>
+                <Typography>{selectedVehicle.tipo}</Typography>
+              </Box>
+              <Box sx={{ display: 'flex', gap: 1 }}>
+                <Typography sx={{ fontWeight: 600 }}>Año:</Typography>
+                <Typography>{selectedVehicle.anio}</Typography>
+              </Box>
+              <Box sx={{ display: 'flex', gap: 1 }}>
+                <Typography sx={{ fontWeight: 600 }}>Placas:</Typography>
+                <Typography>{selectedVehicle.placas}</Typography>
+              </Box>
+            </Box>
+          </Box>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <Select
+              size="small"
+              value={selectedVehicle.placas}
+              onChange={handleSelectVehicle}
+              sx={{ width: '250px' }}
+            >
+              {vehicles.map((vehicle) => (
+                <MenuItem key={vehicle.placas} value={vehicle.placas}>
+                  {vehicle.marca} - {vehicle.placas}
+                </MenuItem>
+              ))}
+            </Select>
+          </Box>
+        </Box>
+
         {/* Tabla */}
         <TableContainer component={Paper} elevation={0}>
           <Table>
@@ -68,29 +105,44 @@ export default function Products() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {[...Array(rowsPerPage)].map((_, index) => (
+              {selectedVehicle.fuelLogs.slice((page - 1) * rowsPerPage, page * rowsPerPage).map((log, index) => (
                 <TableRow key={index} sx={{ height: '60px' }}>
-                  <TableCell sx={{ textAlign: 'center', fontSize: '14px', fontWeight: 500, color: '#292D32', verticalAlign: 'middle' }}>12345</TableCell>
-                  <TableCell sx={{ textAlign: 'center', fontSize: '14px', fontWeight: 500, color: '#292D32', verticalAlign: 'middle' }}>Recursos H</TableCell>
-                  <TableCell sx={{ textAlign: 'center', fontSize: '14px', fontWeight: 500, color: '#292D32', verticalAlign: 'middle' }}>{['Super', 'Diesel', 'Regular'][index % 3]}</TableCell>
-                  <TableCell sx={{ textAlign: 'center', fontSize: '14px', fontWeight: 500, color: '#292D32', verticalAlign: 'middle' }}>Q 300.00</TableCell>
-                  <TableCell sx={{ textAlign: 'center', fontSize: '14px', fontWeight: 500, color: '#292D32', verticalAlign: 'middle' }}>24-02-2025</TableCell>
-                  <TableCell sx={{ textAlign: 'center', fontSize: '14px', fontWeight: 500, color: '#292D32', verticalAlign: 'middle' }}>Varios</TableCell>
+                  <TableCell sx={{ textAlign: 'center', fontSize: '14px', fontWeight: 500, color: '#292D32' }}>
+                    {log.noVale}
+                  </TableCell>
+                  <TableCell sx={{ textAlign: 'center', fontSize: '14px', fontWeight: 500, color: '#292D32' }}>
+                    {log.oficina}
+                  </TableCell>
+                  <TableCell sx={{ textAlign: 'center', fontSize: '14px', fontWeight: 500, color: '#292D32' }}>
+                    {log.tipoCombustible}
+                  </TableCell>
+                  <TableCell sx={{ textAlign: 'center', fontSize: '14px', fontWeight: 500, color: '#292D32' }}>
+                    {log.valorVale}
+                  </TableCell>
+                  <TableCell sx={{ textAlign: 'center', fontSize: '14px', fontWeight: 500, color: '#292D32' }}>
+                    {log.fecha}
+                  </TableCell>
+                  <TableCell sx={{ textAlign: 'center', fontSize: '14px', fontWeight: 500, color: '#292D32' }}>
+                    {log.destino}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </TableContainer>
 
-        {/* Paginación */}
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
+        {/* Paginación y conteo de datos */}
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
+          <Typography sx={{ fontSize: '14px', color: '#6B7280' }}>
+            Showing data {((page - 1) * rowsPerPage) + 1} to {Math.min(page * rowsPerPage, totalRecords)} of {totalRecords} entries
+          </Typography>
           <Pagination
             count={totalPages}
             page={page}
-            onChange={handleChange}
+            onChange={handleChangePage}
             shape="rounded"
-            siblingCount={1} // Muestra 1 número antes y después del seleccionado
-            boundaryCount={1} // Muestra el primer y último número
+            siblingCount={1}
+            boundaryCount={1}
             sx={{
               '& .MuiPaginationItem-root': {
                 backgroundColor: '#F5F5F5',
