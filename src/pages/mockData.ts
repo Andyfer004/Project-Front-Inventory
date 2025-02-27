@@ -81,5 +81,47 @@ export const mockFuelData: FuelData[] = [
     cantidadGalones:0,
     fecha: "2024-03-08",
     estado: "Pendiente"
-  }
+  },
+  {
+    id: 10,
+    piloto: "Jerome Bell",
+    placas: "STU901",
+    kilometros: 89012,
+    monto: 420.30,
+    cantidadGalones:0,
+    fecha: "2024-03-08",
+    estado: "Pendiente"
+  },
+  {
+    id: 11,
+    piloto: "Jerome Bell",
+    placas: "STU901",
+    kilometros: 89012,
+    monto: 420.30,
+    cantidadGalones:0,
+    fecha: "2024-03-08",
+    estado: "Pendiente"
+  },
+  {
+    id: 12,
+    piloto: "Jerome Bell",
+    placas: "STU901",
+    kilometros: 89012,
+    monto: 420.30,
+    cantidadGalones:0,
+    fecha: "2024-03-08",
+    estado: "Pendiente"
+  },
+  {
+    id: 13,
+    piloto: "Jerome Bell",
+    placas: "STU901",
+    kilometros: 89012,
+    monto: 420.30,
+    cantidadGalones:0,
+    fecha: "2024-03-08",
+    estado: "Pendiente"
+  },
+  
+
 ];

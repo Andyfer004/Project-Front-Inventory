@@ -19,7 +19,8 @@ import {
   DialogContent,
   DialogActions,
   TextField,
-  Button
+  Button,
+  Pagination
 } from '@mui/material';
 
 import { Visibility, CheckCircleOutline, CancelOutlined } from '@mui/icons-material';
@@ -52,13 +53,12 @@ interface DynamicFuelTableProps {
 const DynamicFuelTable: React.FC<DynamicFuelTableProps> = ({
   dataUrl,
   initialSort = 'fecha',
-  rowsPerPageOptions = [10, 25, 50],
   initialData = []
 }) => {
   const [data, setData] = useState<FuelData[]>(initialData);
-  const [totalItems, setTotalItems] = useState(0);
+  const [totalItems, setTotalItems] = useState(13);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(rowsPerPageOptions[0]);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [order, setOrder] = useState<'asc' | 'desc'>('desc');
   const [orderBy, setOrderBy] = useState<keyof FuelData>(initialSort);
   const [loading, setLoading] = useState(true);
@@ -73,6 +73,7 @@ const [selectedAcceptId, setSelectedAcceptId] = useState<number | null>(null);
 // Estado para el modal del vale
 const [openVoucherModal, setOpenVoucherModal] = useState(false);
 
+const totalPages = Math.ceil(totalItems / rowsPerPage);
 
   const fetchData = async () => {
     setLoading(true);
@@ -170,7 +171,7 @@ const [openVoucherModal, setOpenVoucherModal] = useState(false);
 
   
   return (
-    <Paper sx={{ width: '100%', borderRadius: '30px', overflow: 'hidden' }}>
+    <Paper sx={{ width: '100%', borderRadius: '30px', overflow: 'hidden', boxShadow: '0px 10px 60px rgba(226, 236, 249, 0.5)' }}>
       <TableContainer>
         {loading && (
           <Box sx={{ display: 'flex', justifyContent: 'center', p: 3 }}>
@@ -181,78 +182,89 @@ const [openVoucherModal, setOpenVoucherModal] = useState(false);
         {error && <Typography color="error" sx={{ p: 2, textAlign: 'center' }}>{error}</Typography>}
 
         <Table>
-        <TableHead sx={{ background: '#f5f5f5' }}>
-          <TableRow>
-            <TableCell>Piloto</TableCell>
-            <TableCell>Placas</TableCell>
-            <TableCell align="right">Vehículo Kms</TableCell>
-            <TableCell align="right">Cantidad en Quetzales</TableCell>
-            <TableCell align="right">Cantidad de Galones</TableCell> {/* NUEVA COLUMNA */}
-            <TableCell>Fecha</TableCell>
-            <TableCell align="center">Status</TableCell>
-            <TableCell align="center">Acciones</TableCell>
-          </TableRow>
-        </TableHead>
+        <TableHead>
+  <TableRow>
+    {['Piloto', 'Placas', 'Vehículo Kms', 'Cantidad en Quetzales', 'Cantidad de Galones', 'Fecha', 'Status', 'Acciones'].map((header) => (
+      <TableCell
+        key={header}
+        sx={{
+          fontWeight: 600,
+          color: '#B5B7C0', // Color del encabezado
+          textAlign: 'center',
+          fontSize: '14px',
+          backgroundColor: '#FFFFFF' // Asegurar fondo blanco
+        }}
+      >
+        {header}
+      </TableCell>
+    ))}
+  </TableRow>
+</TableHead>
+<TableBody>
+  {data.map((row) => (
+    <TableRow hover key={row.id} sx={{ height: '60px' }}>
+      <TableCell sx={{ textAlign: 'center', fontSize: '14px', fontWeight: 500, color: '#292D32' }}>{row.piloto}</TableCell>
+      <TableCell sx={{ textAlign: 'center', fontSize: '14px', fontWeight: 500, color: '#292D32' }}>{row.placas}</TableCell>
+      <TableCell sx={{ textAlign: 'center', fontSize: '14px', fontWeight: 500, color: '#292D32' }}>{row.kilometros.toLocaleString()}</TableCell>
+      <TableCell sx={{ textAlign: 'center', fontSize: '14px', fontWeight: 500, color: '#292D32' }}>Q {row.monto.toFixed(2)}</TableCell>
+      <TableCell sx={{ textAlign: 'center', fontSize: '14px', fontWeight: 500, color: '#292D32' }}>{row.cantidadGalones.toFixed(2)}</TableCell>
+      <TableCell sx={{ textAlign: 'center', fontSize: '14px', fontWeight: 500, color: '#292D32' }}>{formatDate(row.fecha)}</TableCell>
+      <TableCell align="center">
+        <Tooltip title={row.estado} arrow>
+          <Box
+            sx={{
+              width: 20,
+              height: 20,
+              borderRadius: '50%',
+              backgroundColor: row.estado === 'Aprobado' ? '#4CAF50' :
+                              row.estado === 'Rechazado' ? '#F44336' :
+                              '#888888',
+              display: 'inline-block',
+            }}
+          />
+        </Tooltip>
+      </TableCell>
+      <TableCell align="center">Acciones</TableCell>
+    </TableRow>
+  ))}
+</TableBody>
 
-          <TableBody>
-            {data.map((row) => (
-              <TableRow hover key={row.id}>
-                <TableCell>{row.piloto}</TableCell>
-                <TableCell>{row.placas}</TableCell>
-                <TableCell align="right">{row.kilometros.toLocaleString()}</TableCell>
-                <TableCell align="right">Q {row.monto.toFixed(2)}</TableCell>
-                 <TableCell align="right">{row.cantidadGalones.toFixed(2)}</TableCell> 
-    
-                <TableCell>{formatDate(row.fecha)}</TableCell>
-
-                <TableCell align="center">
-                  <Tooltip title={row.estado} arrow>
-                    <Box
-                      sx={{
-                        width: 20,
-                        height: 20,
-                        borderRadius: '50%',
-                        backgroundColor: row.estado === 'Aprobado' ? '#4CAF50' :
-                                        row.estado === 'Rechazado' ? '#F44336' :
-                                        '#888888',
-                        display: 'inline-block',
-                        cursor: 'pointer'
-                      }}
-                    />
-                  </Tooltip>
-                </TableCell>
-
-                <TableCell align="center">
-                  <Box sx={{ display: 'flex', gap: 1, justifyContent: 'center' }}>
-                    <Tooltip title="Ver detalles">
-                      <IconButton onClick={() => handleView(row.id)} sx={{ backgroundColor: '#f5f5f5', borderRadius: '50%' }}>
-                        <Visibility sx={{ color: '#616161' }} />
-                      </IconButton>
-                    </Tooltip>
-
-                    {row.estado === 'Pendiente' && (
-                      <>
-                       <Tooltip title="Aceptar">
-                        <IconButton onClick={() => handleOpenAcceptModal(row.id)} sx={{ backgroundColor: '#e8f5e9', borderRadius: '50%' }}>
-                          <CheckCircleOutline sx={{ color: '#4CAF50' }} />
-                        </IconButton>
-                      </Tooltip>
-
-
-                        <Tooltip title="Rechazar">
-                          <IconButton onClick={() => handleOpenRejectModal(row.id)} sx={{ backgroundColor: '#ffebee', borderRadius: '50%' }}>
-                            <CancelOutlined sx={{ color: '#F44336' }} />
-                          </IconButton>
-                        </Tooltip>
-                      </>
-                    )}
-                  </Box>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
         </Table>
       </TableContainer>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
+  <Pagination
+    count={Math.ceil(totalItems / rowsPerPage)}
+    page={page + 1} // Asegura que la numeración comience desde 1
+    onChange={(_event, newPage) => setPage(newPage - 1)} // Ajusta el estado correctamente
+    shape="rounded"
+    siblingCount={1} // Muestra 1 número antes y después del seleccionado
+    boundaryCount={1} // Muestra el primer y último número
+    sx={{
+      '& .MuiPaginationItem-root': {
+        backgroundColor: '#F5F5F5',
+        border: '1px solid #EEEEEE',
+        borderRadius: '4px',
+        padding: '6px 9px',
+        margin: '0 5px',
+        minWidth: '26px', // Ajustar tamaño
+        minHeight: '24px'
+      },
+      '& .MuiPaginationItem-ellipsis': {
+        color: '#292D32',
+        fontSize: '14px',
+      },
+      '& .Mui-selected': {
+        backgroundColor: '#38B000',
+        color: '#FFFFFF',
+        border: '1px solid #38B000',
+      },
+      '& .MuiPaginationItem-previousNext': {
+        backgroundColor: 'transparent',
+        color: '#292D32',
+      }
+    }}
+  />
+</Box>
 
 {/* Modal de Rechazo */}
 <Dialog
