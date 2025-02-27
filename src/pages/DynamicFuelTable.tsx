@@ -74,6 +74,9 @@ const [selectedAcceptId, setSelectedAcceptId] = useState<number | null>(null);
 const [openVoucherModal, setOpenVoucherModal] = useState(false);
 
 const totalPages = Math.ceil(totalItems / rowsPerPage);
+const [selectedRow, setSelectedRow] = useState<FuelData | null>(null);
+
+
 
   const fetchData = async () => {
     setLoading(true);
@@ -122,10 +125,11 @@ const totalPages = Math.ceil(totalItems / rowsPerPage);
   };
   
 
-  const handleOpenAcceptModal = (id: number) => {
-    setSelectedAcceptId(id);
+  const handleOpenAcceptModal = (row: FuelData) => {
+    setSelectedRow(row);
     setOpenAcceptModal(true);
   };
+  
   
   const handleView = (id: number) => {
 
@@ -137,9 +141,10 @@ const totalPages = Math.ceil(totalItems / rowsPerPage);
   };
   
   const handleAcceptSubmit = () => {
-    console.log(`Registro ${selectedAcceptId} aceptado`);
-    handleOpenVoucherModal(); // Abrir el modal del vale
+    setOpenAcceptModal(false); // Cerrar el modal de confirmación
+    setOpenVoucherModal(true); // Abrir el modal del vale
   };
+  
   
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('es-GT', {
@@ -240,7 +245,7 @@ const totalPages = Math.ceil(totalItems / rowsPerPage);
                     {row.estado === 'Pendiente' && (
                       <>
                        <Tooltip title="Aceptar">
-                        <IconButton onClick={() => handleOpenAcceptModal(row.id)} sx={{ backgroundColor: '#e8f5e9', borderRadius: '50%' }}>
+                        <IconButton onClick={() => handleOpenAcceptModal(row)} sx={{ backgroundColor: '#e8f5e9', borderRadius: '50%' }}>
                           <CheckCircleOutline sx={{ color: '#4CAF50' }} />
                         </IconButton>
                       </Tooltip>
@@ -381,130 +386,55 @@ const totalPages = Math.ceil(totalItems / rowsPerPage);
 </Dialog>
 
 {/* Modal de Aceptación */}
-<Dialog
-  open={openAcceptModal}
-  onClose={handleCloseAcceptModal}
-  sx={{
-    '& .MuiDialog-paper': {
-      borderRadius: '12px',
-      padding: '20px',
-      width: '420px',
-      boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.15)',
-    }
-  }}
->
-  <DialogTitle sx={{ fontSize: '1.25rem', fontWeight: 'bold', textAlign: 'center', color: '#333' }}>
-  ¿Está seguro de aceptar la solicitud? 
+<Dialog open={openAcceptModal} onClose={() => setOpenAcceptModal(false)}>
+  <DialogTitle sx={{ fontSize: '1.25rem', fontWeight: 'bold', textAlign: 'center' }}>
+    ¿Está seguro de aceptar la solicitud?
   </DialogTitle>
 
   <DialogContent sx={{ textAlign: 'center', pb: 2 }}>
     <Typography variant="body2" sx={{ color: '#666', mb: 2 }}>
-      Si está de acuerdo, favor dar click en aceptar para poder generar el vale.
+      Si está de acuerdo, haga clic en "Aceptar" para continuar con la generación del vale.
     </Typography>
   </DialogContent>
 
-  <DialogActions sx={{ justifyContent: 'center', pb: 1 }}>
-    <Button
-      onClick={handleCloseAcceptModal}
-      sx={{
-        backgroundColor: '#F44336',
-        color: 'white',
-        fontWeight: 'bold',
-        borderRadius: '8px',
-        textTransform: 'none',
-        px: 3,
-        '&:hover': { backgroundColor: '#D32F2F' }
-      }}
-    >
+  <DialogActions sx={{ justifyContent: 'center' }}>
+    <Button onClick={() => setOpenAcceptModal(false)} sx={{ backgroundColor: '#F44336', color: 'white' }}>
       Cancelar
     </Button>
 
-    <Button
-      onClick={handleAcceptSubmit}
-      sx={{
-        backgroundColor: '#4CAF50',
-        color: 'white',
-        fontWeight: 'bold',
-        borderRadius: '8px',
-        textTransform: 'none',
-        px: 3,
-        '&:hover': { backgroundColor: '#388E3C' }
-      }}
-    >
+    <Button onClick={handleAcceptSubmit} sx={{ backgroundColor: '#4CAF50', color: 'white' }}>
       Aceptar
     </Button>
   </DialogActions>
 </Dialog>
-
-<Dialog
-  open={openVoucherModal}
-  onClose={handleCloseVoucherModal}
-  sx={{
-    '& .MuiDialog-paper': {
-      borderRadius: '12px',
-      padding: '20px',
-      width: '500px',
-      boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.15)',
-    }
-  }}
->
-  <DialogTitle sx={{ fontSize: '1.25rem', fontWeight: 'bold', textAlign: 'center', color: '#333' }}>
+<Dialog open={openVoucherModal} onClose={() => setOpenVoucherModal(false)}>
+  <DialogTitle sx={{ fontSize: '1.25rem', fontWeight: 'bold', textAlign: 'center' }}>
     Generar Vale de Combustible
   </DialogTitle>
 
   <DialogContent sx={{ pb: 2 }}>
-    <Box component="form" sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-      <TextField label="Placas" variant="outlined" fullWidth />
-      <TextField label="Destino" variant="outlined" fullWidth />
-      <TextField label="Proveedor del Combustible" variant="outlined" fullWidth />
-      <TextField label="Nombre del Solicitante" variant="outlined" fullWidth />
-      
-      <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mt: 2 }}>
-        Detalle del Combustible
-      </Typography>
-      <TextField label="Galones de Gasolina Súper" type="number" variant="outlined" fullWidth />
-      <TextField label="Galones de Gasolina Regular" type="number" variant="outlined" fullWidth />
-      <TextField label="Galones de Diesel" type="number" variant="outlined" fullWidth />
-      <TextField label="Total Consumo (Q)" type="number" variant="outlined" fullWidth />
-    </Box>
+    {selectedRow && (
+      <Box component="form" sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+        <TextField label="Placas" value={selectedRow.placas} variant="outlined" fullWidth disabled InputLabelProps={{ shrink: true }} />
+        <TextField label="Destino" value={selectedRow.destino} variant="outlined" fullWidth disabled InputLabelProps={{ shrink: true }} />
+        <TextField label="Proveedor del Combustible" value={selectedRow.proveedor} variant="outlined" fullWidth disabled InputLabelProps={{ shrink: true }} />
+        <TextField label="Nombre del Solicitante" value={selectedRow.piloto} variant="outlined" fullWidth disabled InputLabelProps={{ shrink: true }} />
+        <TextField label="Tipo de Gasolina" value={selectedRow.tipoCombustible} variant="outlined" fullWidth disabled InputLabelProps={{ shrink: true }} />
+        <TextField label="Total Consumo (Q)" value={`Q ${selectedRow.monto.toFixed(2)}`} variant="outlined" fullWidth disabled InputLabelProps={{ shrink: true }} />
+      </Box>
+    )}
   </DialogContent>
 
-  <DialogActions sx={{ justifyContent: 'center', pb: 1 }}>
-    <Button
-      onClick={handleCloseVoucherModal}
-      sx={{
-        backgroundColor: '#F44336',
-        color: 'white',
-        fontWeight: 'bold',
-        borderRadius: '8px',
-        textTransform: 'none',
-        px: 3,
-        '&:hover': { backgroundColor: '#D32F2F' }
-      }}
-    >
+  <DialogActions sx={{ justifyContent: 'center' }}>
+    <Button onClick={() => setOpenVoucherModal(false)} sx={{ backgroundColor: '#F44336', color: 'white' }}>
       Cancelar
     </Button>
 
-    <Button
-      onClick={() => {
-        console.log("Vale generado");
-        handleCloseVoucherModal();
-      }}
-      sx={{
-        backgroundColor: '#4CAF50',
-        color: 'white',
-        fontWeight: 'bold',
-        borderRadius: '8px',
-        textTransform: 'none',
-        px: 3,
-        '&:hover': { backgroundColor: '#388E3C' }
-      }}
-    >
+    <Button onClick={() => console.log('Vale generado')} sx={{ backgroundColor: '#4CAF50', color: 'white' }}>
       Generar Vale
     </Button>
   </DialogActions>
 </Dialog>
-
 
 
     </Paper>
