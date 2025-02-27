@@ -29,7 +29,7 @@ export default function Customers() {
           pl: { xs: 2, md: 6 },
         }}
       >
-        Bienvenido 👋
+        Municipalidad Zacapa
       </Typography>
 
       {/* Contenedor grande */}
@@ -70,8 +70,10 @@ export default function Customers() {
           1. Información de la comisión
         </Typography>
         <Box display="grid" gridTemplateColumns="repeat(2, 1fr)" gap={2} mb={3}>
+        <TextField label="No. de Nombramiento" variant="outlined" fullWidth />
           <TextField label="Destino de comisión" variant="outlined" fullWidth />
           <TextField label="Duración de la comisión" variant="outlined" fullWidth />
+          <TextField label="Justificacion" variant="outlined" fullWidth />
           <TextField label="Km estimados a recorrer" variant="outlined" fullWidth />
           <TextField label="Km inicial" variant="outlined" fullWidth />
         </Box>
@@ -81,16 +83,18 @@ export default function Customers() {
           2. Datos del vehículo a utilizar
         </Typography>
         <Box display="grid" gridTemplateColumns="repeat(2, 1fr)" gap={2} mb={3}>
-          <TextField label="Tipo" variant="outlined" fullWidth />
-          <TextField label="Color" variant="outlined" fullWidth />
+          <TextField label="Tipo Vehículo" variant="outlined" fullWidth />
           <TextField label="Marca" variant="outlined" fullWidth />
+          <TextField label="Número de Placa" variant="outlined" fullWidth />
+          <TextField label="Modelo" variant="outlined" fullWidth />
+          <TextField label="Color" variant="outlined" fullWidth />
           <TextField label="Cilindraje del motor" variant="outlined" fullWidth />
           <TextField label="Placa" variant="outlined" fullWidth />
-          <TextField select label="Propiedad Municipal" variant="outlined" fullWidth>
-            <MenuItem value="Sí">Sí</MenuItem>
-            <MenuItem value="No">No</MenuItem>
+          <TextField select label="Propiedad" variant="outlined" fullWidth>
+            <MenuItem value="Municipal">Municipal</MenuItem>
+            <MenuItem value="Particular">Particular</MenuItem>
           </TextField>
-          <TextField label="Modelo" variant="outlined" fullWidth />
+
         </Box>
 
         {/* Información del suministro requerido */}
@@ -98,11 +102,10 @@ export default function Customers() {
           3. Información del suministro requerido
         </Typography>
         <Box display="grid" gridTemplateColumns="repeat(2, 1fr)" gap={2} mb={3}>
-          <TextField label="Cantidad solicitada (galones)" variant="outlined" fullWidth />
-          <TextField select label="Combustible Requerido" variant="outlined" fullWidth>
-            <MenuItem value="Gasolina">Gasolina</MenuItem>
-            <MenuItem value="Diésel">Diésel</MenuItem>
-          </TextField>
+          <TextField label="Tipo de combustible" variant="outlined" fullWidth />
+          <TextField label="Cantidad Solicitada" variant="outlined" fullWidth />
+          <TextField label="Unidad de medida" variant="outlined" fullWidth />
+          
         </Box>
 
         {/* Información de vale entregado */}
@@ -114,12 +117,27 @@ export default function Customers() {
           <TextField label="Valor" variant="outlined" fullWidth />
         </Box>
 
+        <Typography fontWeight={600} mb={1}>
+          5. Observaciones
+        </Typography>
+
+        <Box display="grid" gridTemplateColumns="repeat(2, 1fr)" gap={2} mb={3}>
+          <TextField label="Observaciones" variant="outlined" fullWidth />
+ 
+        </Box>
+
+
+        <Typography fontWeight={600} mb={1}>
+          6. Firmas Observaciones
+        </Typography>
+
         {/* Recibe y entrega */}
         <Box display="grid" gridTemplateColumns="repeat(2, 1fr)" gap={2} mb={3}>
           <TextField label="Recibe: Nombre" variant="outlined" fullWidth />
           <TextField label="Cargo" variant="outlined" fullWidth />
-          <TextField label="Cargo" variant="outlined" fullWidth />
           <TextField label="Entrega: Encargado de Suministro" variant="outlined" fullWidth />
+          <TextField label="Cargo" variant="outlined" fullWidth />
+         
         </Box>
 
         {/* Botón */}
