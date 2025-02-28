@@ -3,7 +3,6 @@ import { Link, useLocation } from 'react-router-dom';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import Inventory2Icon from '@mui/icons-material/Inventory2';
 import PeopleIcon from '@mui/icons-material/People';
-import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 export default function Sidebar() {
@@ -11,9 +10,8 @@ export default function Sidebar() {
 
   const menuItems = [
     { text: 'Tablero', link: '/dashboard', icon: <DashboardIcon fontSize="small" /> },
-    { text: 'Product', link: '/products', icon: <Inventory2Icon fontSize="small" /> },
-    { text: 'Customers', link: '/customers', icon: <PeopleIcon fontSize="small" /> },
-    { text: 'Income', link: '/income', icon: <MonetizationOnIcon fontSize="small" /> },
+    { text: 'Bitácoras', link: '/products', icon: <Inventory2Icon fontSize="small" /> },
+    { text: 'Solicitud Nueva', link: '/customers', icon: <PeopleIcon fontSize="small" /> },
   ];
 
   return (
