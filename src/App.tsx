@@ -11,12 +11,10 @@ export default function App() {
   return (
     <Router>
       <Routes>
-        {/* Página de login sin Sidebar */}
-        <Route path="/" element={<SignIn />} />
-
-        {/* Rutas protegidas */}
+        <Route path="/login" element={<SignIn />} />
         <Route element={<RequireAuth />}>
           <Route path="/" element={<Layout />}>
+            <Route index element={<Dashboard />} />
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="products" element={<Products />} />
             <Route path="customers" element={<Customers />} />
