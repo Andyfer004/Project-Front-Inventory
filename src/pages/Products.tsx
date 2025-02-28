@@ -1,5 +1,5 @@
 import { Box, Typography, Select, MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Pagination } from '@mui/material';
-import { useState } from 'react';
+import { SetStateAction, useState } from 'react';
 import { vehicles } from './data'; // Importamos los datos
 
 export default function Products() {
@@ -9,13 +9,15 @@ export default function Products() {
   const totalRecords = selectedVehicle.fuelLogs.length;
   const totalPages = Math.ceil(totalRecords / rowsPerPage);
 
-  const handleChangePage = (event, value) => {
+  const handleChangePage = (_event: any, value: SetStateAction<number>) => {
     setPage(value);
   };
 
-  const handleSelectVehicle = (event) => {
+  const handleSelectVehicle = (event: { target: { value: string; }; }) => {
     const vehicle = vehicles.find((v) => v.placas === event.target.value);
-    setSelectedVehicle(vehicle);
+    if (vehicle) {
+      setSelectedVehicle(vehicle);
+    }
     setPage(1); // Reiniciar la paginación al cambiar de vehículo
   };
 
