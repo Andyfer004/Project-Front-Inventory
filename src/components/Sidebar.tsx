@@ -35,7 +35,6 @@ export default function Sidebar() {
         position: 'sticky',
         top: 0,
         left: 0,
-        boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.15)',
         overflow: 'hidden',
       }}
     >

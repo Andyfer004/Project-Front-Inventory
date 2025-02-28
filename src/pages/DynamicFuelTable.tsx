@@ -6,10 +6,8 @@ import {
   TableBody,
   TableCell,
   TableContainer,
-  TableSortLabel,
   TableHead,
   TableRow,
-  TablePagination,
   IconButton,
   Tooltip,
   CircularProgress,
@@ -39,12 +37,6 @@ export interface FuelData {
   estado: 'Aprobado' | 'Rechazado' | 'Pendiente';
 }
 
-interface HeadCell {
-  id: keyof FuelData | 'acciones';
-  label: string;
-  numeric: boolean;
-  sortable?: boolean;
-}
 
 interface DynamicFuelTableProps {
   dataUrl: string;
@@ -61,9 +53,9 @@ const DynamicFuelTable: React.FC<DynamicFuelTableProps> = ({
   const [data, setData] = useState<FuelData[]>(initialData);
   const [totalItems, setTotalItems] = useState(13);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [order, setOrder] = useState<'asc' | 'desc'>('desc');
-  const [orderBy, setOrderBy] = useState<keyof FuelData>(initialSort);
+  const [rowsPerPage] = useState(10);
+  const [order] = useState<'asc' | 'desc'>('desc');
+  const [orderBy] = useState<keyof FuelData>(initialSort);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -73,10 +65,9 @@ const DynamicFuelTable: React.FC<DynamicFuelTableProps> = ({
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [rejectReason, setRejectReason] = useState('');
   const [openAcceptModal, setOpenAcceptModal] = useState(false);
-const [selectedAcceptId, setSelectedAcceptId] = useState<number | null>(null);
+
 // Estado para el modal del vale
 const [openVoucherModal, setOpenVoucherModal] = useState(false);
-const totalPages = Math.ceil(totalItems / rowsPerPage);
 const [selectedRow, setSelectedRow] = useState<FuelData | null>(null);
 
 const [cantidad, setCantidad] = useState('');
@@ -110,35 +101,15 @@ useEffect(() => {
     fetchData();
   }, [page, rowsPerPage, orderBy, order]);
 
-  const handleOpenVoucherModal = () => {
-    setOpenAcceptModal(false); // Cerrar el modal de aceptación
-    setOpenVoucherModal(true); // Abrir el modal del vale
-  };
 
   const [selectedFuelType, setSelectedFuelType] = useState('');
-  const [selectedFuelType1, setSelectedFuelType1] = useState('');
 
 
   
-  const handleCloseVoucherModal = () => {
-    setOpenVoucherModal(false);
-  };
 
   
-  const handleSort = (property: keyof FuelData) => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
-    setOrderBy(property);
-  };
 
-  const handleChangePage = (_event: unknown, newPage: number) => {
-    setPage(newPage);
-  };
 
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
   
 
   const handleOpenAcceptModal = (row: FuelData) => {
@@ -147,14 +118,11 @@ useEffect(() => {
   };
   
   
-  const handleView = (id: number) => {
+  const handleView = (_id?: number) => {
 
   };
   
 
-  const handleCloseAcceptModal = () => {
-    setOpenAcceptModal(false);
-  };
   
   const handleAcceptSubmit = () => {
     setOpenAcceptModal(false); // Cerrar el modal de confirmación
@@ -171,10 +139,6 @@ useEffect(() => {
   };
 
   // Manejador para aceptar
-  const handleAccept = (id: number) => {
-    console.log(`Aceptar registro con id: ${id}`);
-    // Aquí podrías hacer una llamada a la API
-  };
 
   // Manejador para abrir el modal de rechazo
   const handleOpenRejectModal = (id: number) => {
