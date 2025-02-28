@@ -7,16 +7,24 @@ export default function SignIn() {
   const [formData, setFormData] = React.useState({ email: '', password: '' });
   const [error, setError] = React.useState('');
 
+  // Credenciales de admin "quemadas"
+  const adminCredentials = {
+    email: 'admin@example.com',
+    password: 'admin123',
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSignIn = async () => {
+  const handleSignIn = () => {
     const { email, password } = formData;
     console.log(`Signing in with email: ${email}, password: ${password}`);
 
-    if (email === '' && password === '') {
-      navigate('/');
+    if (email === adminCredentials.email && password === adminCredentials.password) {
+      // Guarda flag de autenticación (puedes usar localStorage o un contexto)
+      localStorage.setItem('auth', 'true');
+      navigate('/dashboard');
     } else {
       setError('Invalid email or password. Try again.');
     }

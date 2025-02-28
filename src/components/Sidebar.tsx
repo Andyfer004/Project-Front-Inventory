@@ -1,18 +1,25 @@
-import { Box, List, ListItem, ListItemText, Typography, ListItemIcon, Avatar } from '@mui/material';
-import { Link, useLocation } from 'react-router-dom';
+import { Box, List, ListItem, ListItemText, Typography, ListItemIcon, Avatar, Button } from '@mui/material';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import Inventory2Icon from '@mui/icons-material/Inventory2';
 import PeopleIcon from '@mui/icons-material/People';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 export default function Sidebar() {
   const location = useLocation();
+  const navigate = useNavigate();
 
   const menuItems = [
     { text: 'Tablero', link: '/dashboard', icon: <DashboardIcon fontSize="small" /> },
     { text: 'Bitácoras', link: '/products', icon: <Inventory2Icon fontSize="small" /> },
     { text: 'Solicitud Nueva', link: '/customers', icon: <PeopleIcon fontSize="small" /> },
   ];
+
+  const handleLogout = () => {
+    localStorage.removeItem('auth'); // Elimina la sesión
+    navigate('/login'); // Redirige al login
+  };
 
   return (
     <Box
@@ -32,6 +39,7 @@ export default function Sidebar() {
         overflow: 'hidden',
       }}
     >
+      {/* Logo */}
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 4, width: '100%', pl: 3 }}>
         <img src="/Zacapa.png" alt="Logo" width="50" height="50" />
         <Typography
@@ -46,7 +54,9 @@ export default function Sidebar() {
           Muni Zacapa
         </Typography>
       </Box>
-      <List sx={{ width: '100%', mt: 1, flexGrow: 1, pl: 2, pr: 2, overflowY: 'auto', maxHeight: 'calc(100vh - 180px)' }}>
+
+      {/* Menú */}
+      <List sx={{ width: '100%', mt: 1, flexGrow: 1, pl: 2, pr: 2, overflowY: 'auto', maxHeight: 'calc(100vh - 200px)' }}>
         {menuItems.map((item, index) => (
           <ListItem
             key={index}
@@ -75,9 +85,9 @@ export default function Sidebar() {
           </ListItem>
         ))}
       </List>
-      
+
       {/* Sección del usuario */}
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 3, width: '100%', justifyContent: 'space-between' }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, p: 2, width: '100%', justifyContent: 'space-between' }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
           <Avatar src="/profile.jpg" alt="Andy Solis" sx={{ width: 45, height: 45 }} />
           <Box>
@@ -87,6 +97,26 @@ export default function Sidebar() {
         </Box>
         <ExpandMoreIcon sx={{ color: '#A0A0B0', fontSize: '20px' }} />
       </Box>
+
+      {/* Botón de Logout */}
+      <Button
+        variant="contained"
+        fullWidth
+        startIcon={<LogoutIcon />}
+        onClick={handleLogout}
+        sx={{
+          mt: 2,
+          backgroundColor: '#ff4d4d',
+          color: 'white',
+          fontWeight: 'bold',
+          textTransform: 'none',
+          borderRadius: '8px',
+          '&:hover': { backgroundColor: '#d43f3f' },
+          transition: 'all 0.3s ease',
+        }}
+      >
+        Cerrar Sesión
+      </Button>
     </Box>
   );
 }
