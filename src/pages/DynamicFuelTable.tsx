@@ -20,6 +20,8 @@ import {
   DialogActions,
   TextField,
   Button,
+  MenuItem,
+  Grid,
   Pagination
 } from '@mui/material';
 
@@ -65,6 +67,7 @@ const DynamicFuelTable: React.FC<DynamicFuelTableProps> = ({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+
   // Estado para el modal de rechazo
   const [openRejectModal, setOpenRejectModal] = useState(false);
   const [selectedId, setSelectedId] = useState<number | null>(null);
@@ -73,11 +76,18 @@ const DynamicFuelTable: React.FC<DynamicFuelTableProps> = ({
 const [selectedAcceptId, setSelectedAcceptId] = useState<number | null>(null);
 // Estado para el modal del vale
 const [openVoucherModal, setOpenVoucherModal] = useState(false);
-
 const totalPages = Math.ceil(totalItems / rowsPerPage);
 const [selectedRow, setSelectedRow] = useState<FuelData | null>(null);
 
+const [cantidad, setCantidad] = useState('');
+const [importe, setImporte] = useState('');
+const [montoTotal, setMontoTotal] = useState('');
 
+useEffect(() => {
+  const cantidadNum = parseFloat(cantidad) || 0;
+  const importeNum = parseFloat(importe) || 0;
+  setMontoTotal((cantidadNum * importeNum).toFixed(2));
+}, [cantidad, importe])
 
   const fetchData = async () => {
     setLoading(true);
@@ -104,6 +114,11 @@ const [selectedRow, setSelectedRow] = useState<FuelData | null>(null);
     setOpenAcceptModal(false); // Cerrar el modal de aceptación
     setOpenVoucherModal(true); // Abrir el modal del vale
   };
+
+  const [selectedFuelType, setSelectedFuelType] = useState('');
+  const [selectedFuelType1, setSelectedFuelType1] = useState('');
+
+
   
   const handleCloseVoucherModal = () => {
     setOpenVoucherModal(false);
@@ -432,42 +447,66 @@ const [selectedRow, setSelectedRow] = useState<FuelData | null>(null);
   </DialogActions>
 </Dialog>
 <Dialog open={openVoucherModal} onClose={() => setOpenVoucherModal(false)}>
-  <DialogTitle sx={{ fontSize: '1.25rem', fontWeight: 'bold', textAlign: 'center' }}>
-    Generar Vale de Combustible
-  </DialogTitle>
-
-  <DialogContent sx={{ pb: 2 }}>
-    {selectedRow && (
-      <Box component="form" sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-        <TextField label="Placas" value={selectedRow.placas} variant="outlined" fullWidth disabled InputLabelProps={{ shrink: true }} />
-        <TextField label="Destino" value={selectedRow.destino} variant="outlined" fullWidth disabled InputLabelProps={{ shrink: true }} />
-        <TextField label="Proveedor del Combustible" value={selectedRow.proveedor} variant="outlined" fullWidth disabled InputLabelProps={{ shrink: true }} />
-        <TextField label="Nombre del Solicitante" value={selectedRow.piloto} variant="outlined" fullWidth disabled InputLabelProps={{ shrink: true }} />
-        <TextField label="Tipo de Gasolina" value={selectedRow.tipoCombustible} variant="outlined" fullWidth disabled InputLabelProps={{ shrink: true }} />
-        <TextField label="Total Consumo (Q)" value={`Q ${selectedRow.monto.toFixed(2)}`} variant="outlined" fullWidth disabled InputLabelProps={{ shrink: true }} />
-      </Box>
-    )}
-  </DialogContent>
-
-  <DialogActions sx={{ justifyContent: 'center' }}>
-    <Button onClick={() => setOpenVoucherModal(false)} sx={{ backgroundColor: '#F44336', color: 'white' }}>
-      Cancelar
-    </Button>
-
-    <Button
+        <DialogTitle sx={{ fontSize: '1.5rem', fontWeight: 'bold', textAlign: 'center', pb: 2 }}>
+          Generar Vale de Combustible
+        </DialogTitle>
+        <DialogContent>
+          {selectedRow && (
+            <Box component="form" sx={{ display: 'flex', flexDirection: 'column', gap: 2, p: 2 }}>
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6}>
+                  <TextField label="Numero de Formulario Relacionado" value={selectedRow.id} variant="outlined" fullWidth disabled InputLabelProps={{ shrink: true }} />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField label="Proveedor del Combustible" variant="outlined" fullWidth />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField label="Nombre del Solicitante" value={selectedRow.piloto} variant="outlined" fullWidth disabled InputLabelProps={{ shrink: true }} />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField label="Tipo de Combustible" select value={selectedFuelType} onChange={(e) => setSelectedFuelType(e.target.value)} variant="outlined" fullWidth>
+                    <MenuItem value="">Seleccione...</MenuItem>
+                    <MenuItem value="Gasolina Súper">Súper</MenuItem>
+                    <MenuItem value="Gasolina Regular">Regular</MenuItem>
+                    <MenuItem value="Gasolina Diesel">Diesel</MenuItem>
+                  </TextField>
+                </Grid>
+                <Grid item xs={12} sm={3}>
+                  <TextField label="Cantidad" variant="outlined" fullWidth value={cantidad} onChange={(e) => setCantidad(e.target.value)} />
+                </Grid>
+                <Grid item xs={12} sm={3}>
+                  <TextField label="Importe" select variant="outlined" fullWidth value={importe} onChange={(e) => setImporte(e.target.value)}>
+                    <MenuItem value="">Seleccione...</MenuItem>
+                    <MenuItem value="20">Q 20</MenuItem>
+                    <MenuItem value="50">Q 50</MenuItem>
+                    <MenuItem value="100">Q 100</MenuItem>
+                  </TextField>
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField label="Monto Total" variant="outlined" fullWidth value={montoTotal} disabled InputLabelProps={{ shrink: true }} />
+                </Grid>
+              </Grid>
+            </Box>
+          )}
+        </DialogContent>
+        <DialogActions sx={{ justifyContent: 'center', pb: 2, px: 3 }}>
+          <Button onClick={() => setOpenVoucherModal(false)} sx={{ backgroundColor: '#F44336', color: 'white', fontWeight: 'bold', px: 3, borderRadius: '8px' }}>
+            Cancelar
+          </Button>
+          <Button
   onClick={() => {
     // Cierra el modal si quieres
     setOpenVoucherModal(false);
     // Genera el PDF
     generateValePdf();
   }}
-  sx={{ backgroundColor: '#4CAF50', color: 'white' }}
+  sx={{ backgroundColor: '#4CAF50', color: 'white', fontWeight: 'bold', px: 3, borderRadius: '8px' }}
 >
-  Generar Vale
-</Button>
-
+        Generar Vale
+      </Button>
+      
   </DialogActions>
-</Dialog>
+      </Dialog>
 
 
     </Paper>
