@@ -10,23 +10,35 @@ export default function SignIn() {
   const [formData, setFormData] = React.useState({ email: '', password: '' });
   const [error, setError] = React.useState('');
 
-  const handleChange = (e) => {
+  // Credenciales de administrador "quemadas"
+  const adminCredentials = {
+    email: 'admin@example.com',
+    password: 'admin123'
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSignIn = async () => {
+  const handleSignIn = () => {
     const { email, password } = formData;
     console.log(`Signing in with email: ${email}, password: ${password}`);
 
-    if (email === '' || password === '') {
+    if (!email || !password) {
       setError('Please enter both username and password.');
+      return;
+    }
+
+    if (email === adminCredentials.email && password === adminCredentials.password) {
+      // Si las credenciales son correctas, guarda el flag de autenticación
+      localStorage.setItem('auth', 'true');
+      navigate('/dashboard');
     } else {
-      navigate('/');
+      setError('Invalid username or password. Try again.');
     }
   };
 
   return (
-    
     <Box
       sx={{
         height: '100vh',
@@ -47,13 +59,31 @@ export default function SignIn() {
           textAlign: 'center',
         }}
       >
-        <Box component="img" src={muniLogo} alt="Municipio de Zacapa" sx={{ width: '100px', mb: 2 }} />
+        <Box
+          component="img"
+          src={muniLogo}
+          alt="Municipio de Zacapa"
+          sx={{ width: '100px', mb: 2 }}
+        />
 
-        <Typography variant="h5" fontWeight={700} mb={3} sx={{ fontFamily: 'Poppins, sans-serif', color: '#000000' }}>
+        <Typography
+          variant="h5"
+          fontWeight={700}
+          mb={3}
+          sx={{
+            fontFamily: 'Poppins, sans-serif',
+            color: '#000000',
+          }}
+        >
           Municipalidad de Zacapa
         </Typography>
 
-        <Typography variant="body2" fontWeight={500} textAlign="left" sx={{ fontFamily: 'Poppins, sans-serif', mb: 0.5 }}>
+        <Typography
+          variant="body2"
+          fontWeight={500}
+          textAlign="left"
+          sx={{ fontFamily: 'Poppins, sans-serif', mb: 0.5 }}
+        >
           Username
         </Typography>
         <TextField
@@ -63,7 +93,11 @@ export default function SignIn() {
           variant="outlined"
           value={formData.email}
           onChange={handleChange}
-          sx={{ mb: 2, borderRadius: 1, fontFamily: 'Poppins, sans-serif' }}
+          sx={{
+            mb: 2,
+            borderRadius: 1,
+            fontFamily: 'Poppins, sans-serif',
+          }}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -73,7 +107,12 @@ export default function SignIn() {
           }}
         />
 
-        <Typography variant="body2" fontWeight={500} textAlign="left" sx={{ fontFamily: 'Poppins, sans-serif', mb: 0.5 }}>
+        <Typography
+          variant="body2"
+          fontWeight={500}
+          textAlign="left"
+          sx={{ fontFamily: 'Poppins, sans-serif', mb: 0.5 }}
+        >
           Password
         </Typography>
         <TextField
@@ -83,7 +122,11 @@ export default function SignIn() {
           variant="outlined"
           value={formData.password}
           onChange={handleChange}
-          sx={{ mb: 2, borderRadius: 1, fontFamily: 'Poppins, sans-serif' }}
+          sx={{
+            mb: 2,
+            borderRadius: 1,
+            fontFamily: 'Poppins, sans-serif',
+          }}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
