@@ -12,7 +12,7 @@ export default function App() {
     <Router>
       <Routes>
         {/* Página de login sin Sidebar */}
-        <Route path="/login" element={<SignIn />} />
+        <Route path="/" element={<SignIn />} />
 
         {/* Rutas protegidas */}
         <Route element={<RequireAuth />}>
