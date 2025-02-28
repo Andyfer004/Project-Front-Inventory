@@ -180,83 +180,28 @@ const [selectedRow, setSelectedRow] = useState<FuelData | null>(null);
     handleCloseRejectModal();
   };
 
-  const generateValePdf = () => {
-    const doc = new jsPDF('p', 'pt', 'letter'); // orientación "portrait", unidad "pt" y tamaño "letter"
-  
-    // Encabezados principales
-    doc.setFontSize(12);
-    doc.text('Municipalidad de Cabañas Zacapa', 40, 40);
-    doc.setFontSize(10);
-    doc.text('Banco de Oriente, Frente al Parque Central, Municipio', 40, 55);
-  
-    // Número de Vale (alineado hacia la derecha en x=430 aprox)
-    doc.setFontSize(12);
-    doc.text('Vale N° 007401', 430, 40);
-  
-    // Cuadro: Vehículos, Motocicletas, Equipos y/o motores
-    doc.setLineWidth(0.5);
-    doc.rect(40, 70, 180, 70); // x=40, y=70, ancho=180, alto=70
-    doc.setFontSize(10);
-    doc.text('Vehículos', 50, 90);
-    doc.text('Motocicletas', 50, 110);
-    doc.text('Equipos y/o motores', 50, 130);
-  
-    // Cuadro: Placas
-    doc.rect(220, 70, 150, 70);
-    doc.text('Placas', 230, 90);
-  
-    // Cuadro: Número
-    doc.rect(370, 70, 130, 70);
-    doc.text('N° ________', 380, 90);
-  
-    // Proveedor del Combustible
-    doc.setFontSize(10);
-    doc.text('PROVEEDOR DEL COMBUSTIBLE', 40, 160);
-    doc.line(40, 165, 550, 165);
-  
-    // Nombre del Solicitante
-    doc.text('NOMBRE COMPLETO DEL SOLICITANTE', 40, 185);
-    doc.line(40, 190, 550, 190);
-  
-    // Encabezados de la "tabla" de combustibles
-    doc.text('GALONES', 40, 220);
-    doc.text('DESIGNACIÓN COMBUSTIBLE', 180, 220);
-    doc.text('IMPORTE (Q)', 420, 220);
-  
-    // Gasolina Súper
-    doc.text('Gasolina Súper', 180, 240);
-    doc.line(40, 245, 80, 245);   // para los galones
-    doc.line(180, 245, 360, 245); // designación
-    doc.line(420, 245, 550, 245); // importe
-  
-    // Gasolina Regular
-    doc.text('Gasolina Regular', 180, 260);
-    doc.line(40, 265, 80, 265);
-    doc.line(180, 265, 360, 265);
-    doc.line(420, 265, 550, 265);
-  
-    // Gasolina Diesel
-    doc.text('Gasolina Diesel', 180, 280);
-    doc.line(40, 285, 80, 285);
-    doc.line(180, 285, 360, 285);
-    doc.line(420, 285, 550, 285);
-  
-    // Total Consumo
-    doc.text('TOTAL CONSUMO expresado en quetzales', 40, 320);
-    doc.line(40, 325, 550, 325);
-  
-    // Firmas
-    doc.text('FIRMA DEL SOLICITANTE', 40, 360);
-    doc.line(40, 365, 300, 365);
-  
-    doc.text('ENCARGADO DE COMBUSTIBLE', 40, 395);
-    doc.line(40, 400, 300, 400);
-  
-    doc.text('ALCALDE MUNICIPAL', 40, 430);
-    doc.line(40, 435, 300, 435);
-  
-    // Descarga el PDF
-    doc.save('Vale_de_combustible.pdf');
+  const generateValePdf = async () => {
+    const doc = new jsPDF('p', 'pt', 'letter'); // (portrait, points, carta)
+
+  // 1. Descarga la imagen de /public/vale.jpeg
+  const response = await fetch('/vale.png');
+  const blob = await response.blob();
+
+  // 2. Convierte el blob a Base64 (dataURL)
+  const reader = new FileReader();
+  const dataURLPromise = new Promise((resolve) => {
+    reader.onloadend = () => resolve(reader.result);
+  });
+  reader.readAsDataURL(blob);
+  const dataURL = (await dataURLPromise) as string;
+
+  // 3. Añade la imagen al PDF (ajusta ancho/alto a tu gusto)
+  //    612 x 792 pt = tamaño carta en puntos
+  doc.addImage(dataURL, 'JPEG', 0, 0, 612, 792);
+
+
+  // 5. Descarga/guarda el PDF
+  doc.save('Vale_de_combustible.pdf');
   };
 
   return (
